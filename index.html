@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studiu de Caz: Git & GitHub</title>
+    <!-- Fonturile JetBrains Mono și Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .green { color: #3fb950; }
+        .white { color: #ffffff; }
+        .gray { color: #8b949e; }
+        h1, h2, h3 { font-weight: 700; }
+        h1 { font-size: 3rem; color: #ffffff; }
+
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 0 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header .init-cmd { font-size: 1rem; color: #3fb950; }
+        header .main-title { font-size: 4rem; margin-top: 10px; }
+        header .subtitle { font-size: 1.25rem; color: #c9d1d9; }
+        header .project-desc { font-size: 1rem; color: #8b949e; margin-top: 10px; }
+
+        .header-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .stat-card {
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .stat-number { font-size: 1.25rem; font-weight: 700; color: #ffffff; }
+        .stat-text { font-size: 0.9rem; color: #8b949e; }
+
+        section { padding: 40px 0; width: 100%; }
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .section-number { font-size: 1.5rem; color: #3fb950; font-weight: 700; }
+        .section-title { font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; color: #8b949e; }
+
+        .fundamentals-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .fundamentals-grid .card-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        .btn-tag {
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .code-block {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .workflow-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        .workflow-number {
+            font-size: 1rem;
+            color: #3fb950;
+            background-color: #161b22;
+            border: 1px solid #3fb950;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            margin-top: 15px;
+        }
+        .workflow-content { width: 100%; }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .why-card { text-align: left; padding: 25px; }
+        .why-card .card-title { color: #ffffff; margin-bottom: 10px; font-size: 1.2rem; }
+        .why-card-icon { font-size: 2rem; margin-bottom: 15px; }
+
+        .terminal-block {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .terminal-header {
+            background-color: #161b22;
+            padding: 10px 15px;
+            border-bottom: 1px solid #30363d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background-color: #ff5f57; }
+        .yellow { background-color: #febc2e; }
+        .green-dot { background-color: #28c840; }
+        .terminal-title { font-size: 0.8rem; color: #8b949e; margin-left: auto; }
+
+        .terminal-body {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .command-card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            padding: 12px;
+        }
+        .cmd-line { font-weight: 500; }
+        .cmd-desc { font-size: 0.85rem; color: #8b949e; margin-top: 4px; }
+
+        .adoption-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .progress-bar-item { margin-bottom: 15px; }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #8b949e;
+            margin-bottom: 5px;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #21262d;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #3fb950;
+        }
+
+        .impact-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .impact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+        }
+        .impact-number { font-size: 1.5rem; font-weight: 700; }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .practices-card .card-title { color: #ffffff; margin-bottom: 10px; }
+        .bad-commit { color: #ff5f57; margin-right: 10px; }
+        .good-commit { color: #3fb950; margin-right: 10px; }
+
+        footer {
+            text-align: center;
+            padding: 50px 0;
+            width: 100%;
+            border-top: 1px solid #30363d;
+            background-color: #161b22;
+            margin-top: 40px;
+        }
+        footer .subtitle { font-size: 1rem; color: #8b949e; margin-top: 10px; }
+        footer .footer-right { margin-top: 25px; font-size: 0.8rem; color: #8b949e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="init-cmd mono">$ git init echipa-mea-de-succes</div>
+            <h1 class="main-title">GIT / GITHUB</h1>
+            <div class="subtitle">Importanța Utilizării Aplicațiilor de Lucru în Echipă</div>
+            <div class="project-desc">Lucrul la un proiect comun</div>
+            <div class="header-stats">
+                <div class="stat-card card">
+                    <div class="stat-icon">🧑‍💻</div>
+                    <div>
+                        <div class="stat-number green mono">100M+</div>
+                        <div class="stat-text">dezvoltatori</div>
+                    </div>
+                </div>
+                <div class="stat-card card">
+                    <div class="stat-icon">🗄️</div>
+                    <div>
+                        <div class="stat-number green mono">420M+</div>
+                        <div class="stat-text">repository-uri</div>
+                    </div>
+                </div>
+                <div class="stat-card card">
+                    <div class="stat-icon">💎</div>
+                    <div>
+                        <div class="stat-number green mono">90% din Fortune 100</div>
+                        <div class="stat-text">Adoptat de</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 01 FUNDAMENTE -->
+        <section id="fundamente">
+            <div class="section-header">
+                <span class="section-number mono">01 —</span>
+                <span class="section-title">FUNDAMENTE</span>
+            </div>
+            <div class="fundamentals-grid">
+                <div class="card">
+                    <div class="card-title"><span class="green">⚙️</span> Ce este GIT?</div>
+                    <p>Git este un <span class="green">sistem distribuit de control al versiunilor</span> care urmărește fiecare modificare a codului sursă, permițând colaborarea mai multor dezvoltatori fără conflicte.</p>
+                    <div class="code-block mono green">$ git log --oneline<br>a3f8c12 feat: adaugă autentificare<br>b7e1d09 fix: rezolvă bug login</div>
+                </div>
+                <div class="card">
+                    <div class="card-title"><span class="green">🐙</span> Ce este GitHub?</div>
+                    <p>GitHub este o <span class="green">platformă cloud de găzduire</span> cu funcționalități de colaborare: pull requests, code review, issues și automatizare CI/CD.</p>
+                    <div>
+                        <span class="btn-tag">Pull Requests</span>
+                        <span class="btn-tag">Issues</span>
+                        <span class="btn-tag">Codespaces</span>
+                        <span class="btn-tag">Copilot</span>
+                        <span class="btn-tag">Projects</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 02 FLUXUL DE LUCRU -->
+        <section id="flux">
+            <div class="section-header">
+                <span class="section-number mono">02 —</span>
+                <span class="section-title">FLUXUL DE LUCRU ÎN ECHIPĂ</span>
+            </div>
+            
+            <div class="workflow-item">
+                <div class="workflow-number mono">1</div>
+                <div class="workflow-content card">
+                    <div class="card-title"><span class="green">🍴</span> Fork & Clone</div>
+                    <p>Fiecare membru creează o copie locală. Modificările personale nu afectează codul principal până la aprobare.</p>
+                    <div class="code-block mono green">$ git clone https://github.com/org/proiect.git</div>
+                </div>
+            </div>
+            
+            <div class="workflow-item">
+                <div class="workflow-number mono">2</div>
+                <div class="workflow-content card">
+                    <div class="card-title"><span class="green">🌿</span> Branch — Izolarea Funcționalităților</div>
+                    <p>Fiecare feature sau bugfix se dezvoltă pe un branch separat. Ramura principală (main) rămâne stabilă.</p>
+                </div>
+            </div>
+
+            <div class="workflow-item">
+                <div class="workflow-number mono">3</div>
+                <div class="workflow-content card">
+                    <div class="card-title"><span class="green">💬</span> Pull Request & Code Review</div>
+                    <p>Modificările sunt revizuite de colegi înainte de integrare pentru a asigura calitatea codului.</p>
+                </div>
+            </div>
+
+            <div class="workflow-item">
+                <div class="workflow-number mono">4</div>
+                <div class="workflow-content card">
+                    <div class="card-title"><span class="green">🔀</span> Merge & Deploy</div>
+                    <p>După aprobare, codul este integrat în ramura principală și livrat automat.</p>
+                    <div class="code-block mono green">$ git merge feature/login --no-ff</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 DE CE CONTEAZĂ -->
+        <section id="why">
+            <div class="section-header">
+                <span class="section-number mono">03 —</span>
+                <span class="section-title">DE CE CONTEAZĂ</span>
+            </div>
+            <div class="why-grid">
+                <div class="why-card card">
+                    <div class="why-card-icon">🔒</div>
+                    <div class="card-title">Siguranța Codului</div>
+                    <p>Nicio modificare nu se pierde. Istoricul complet permite revenirea la versiuni anterioare.</p>
+                </div>
+                <div class="why-card card">
+                    <div class="why-card-icon">⚡</div>
+                    <div class="card-title">Productivitate Sporită</div>
+                    <p>Zeci de developeri pot lucra simultan fără să blocheze activitatea celorlalți.</p>
+                </div>
+                <div class="why-card card">
+                    <div class="why-card-icon">👁️</div>
+                    <div class="card-title">Transparență Totală</div>
+                    <p>Fiecare commit înregistrează cine și ce a modificat în cadrul echipei.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 COMENZI ESENȚIALE -->
+        <section id="commands">
+            <div class="section-header">
+                <span class="section-number mono">04 —</span>
+                <span class="section-title">COMENZI ESENȚIALE</span>
+            </div>
+            <div class="terminal-block">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green-dot"></span>
+                    <span class="terminal-title mono">terminal -- bash</span>
+                </div>
+                <div class="terminal-body mono">
+                    <div class="command-card">
+                        <div class="cmd-line green">$ git init</div>
+                        <div class="cmd-desc">Inițializează un repository nou</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="cmd-line green">$ git clone &lt;url&gt;</div>
+                        <div class="cmd-desc">Clonează un repository existent</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="cmd-line green">$ git add .</div>
+                        <div class="cmd-desc">Adaugă toate modificările în staging</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="cmd-line green">$ git commit -m "mesaj"</div>
+                        <div class="cmd-desc">Salvează modificările efectuate</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="cmd-line green">$ git push origin main</div>
+                        <div class="cmd-desc">Trimite codul pe GitHub</div>
+                    </div>
+                    <div class="command-card">
+                        <div class="cmd-line green">$ git pull origin main</div>
+                        <div class="cmd-desc">Actualizează codul local de pe server</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 ADOPȚIE GLOBALĂ -->
+        <section id="global">
+            <div class="section-header">
+                <span class="section-number mono">05 —</span>
+                <span class="section-title">ADOPȚIE GLOBALĂ</span>
+            </div>
+            <div class="adoption-grid">
+                <div class="card">
+                    <div class="card-title" style="color: #fff; margin-bottom: 15px;">Utilizare Git în industrie</div>
+                    <div class="progress-bar-item">
+                        <div class="progress-label"><span>Companii Fortune 500</span><span class="mono green">94%</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 94%;"></div></div>
+                    </div>
+                    <div class="progress-bar-item">
+                        <div class="progress-label"><span>Developeri profesioniști</span><span class="mono green">87%</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 87%;"></div></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title" style="color: #fff; margin-bottom: 15px;">Impactul Code Review</div>
+                    <div class="impact-stats">
+                        <div class="impact-item">
+                            <div class="impact-number green mono">~75%</div>
+                            <div>Reducerea bug-urilor în producție</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-number green mono">+40%</div>
+                            <div>Viteză crescută de integrat noi membri</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06 BUNE PRACTICI -->
+        <section id="practices">
+            <div class="section-header">
+                <span class="section-number mono">06 —</span>
+                <span class="section-title">BUNE PRACTICI</span>
+            </div>
+            <div class="practices-grid">
+                <div class="practices-card card">
+                    <div class="card-title">✍️ Mesaje de commit clare</div>
+                    <p class="mono"><span class="bad-commit">✕</span> git commit -m "fix"</p>
+                    <p class="mono"><span class="good-commit">✓</span> git commit -m "fix: rezolvă eroarea 404 la logout"</p>
+                </div>
+                <div class="practices-card card">
+                    <div class="card-title">🛡️ Protejați branch-ul main</div>
+                    <p>Setați reguli de protecție pe GitHub: minim 1 aprobare prin Pull Request înainte de integrare.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 07 EXTENSII ȘI ECOSISTEM -->
+        <section id="extensions">
+            <div class="section-header">
+                <span class="section-number mono">07 —</span>
+                <span class="section-title">EXTENSII ȘI ECOSISTEM GITHUB</span>
+            </div>
+            <div class="why-grid">
+                <div class="why-card card">
+                    <div class="why-card-icon">💻</div>
+                    <div class="card-title">GitHub Codespaces</div>
+                    <p>Mediu de dezvoltare complet (VS Code) accesibil direct în browser. Permite echipei să înceapă scrierea de cod instant, fără configurări locale complexe.</p>
+                </div>
+                <div class="why-card card">
+                    <div class="why-card-icon">🤖</div>
+                    <div class="card-title">GitHub Copilot</div>
+                    <p>Asistent virtual bazat pe AI ce oferă sugestii de cod în timp real, accelerează scrierea funcțiilor și ajută la explicarea codului existent.</p>
+                </div>
+                <div class="why-card card">
+                    <div class="why-card-icon">📋</div>
+                    <div class="card-title">GitHub Projects</div>
+                    <p>Tablouri de bord Kanban și grafice de planificare integrated direct cu depozitul de cod pentru gestionarea sarcinilor și a sprinturilor echipei.</p>
+                </div>
+                <div class="why-card card">
+                    <div class="why-card-icon">💬</div>
+                    <div class="card-title">GitHub Discussions</div>
+                    <p>Spațiu dedicat conversațiilor, ideilor noi și întrebărilor comunității sau echipei, păstrând secțiunea de Issues curată doar pentru bug-uri.</p>
+                </div>
+                <div class="why-card card">
+                    <div class="why-card-icon">🔀</div>
+                    <div class="card-title">All Pull Requests</div>
+                    <p>Centralizează toate propunerile de modificare din proiectele echipei, facilitând procesul de Code Review și aprobare rapidă a schimbărilor.</p>
+                </div>
+                <div class="why-card card">
+                    <div class="why-card-icon">🎯</div>
+                    <div class="card-title">All Issues</div>
+                    <p>Urmărirea centralizată a tuturor problemelor, erorilor și cerințelor de funcționalități noi raportate de colegi sau utilizatori.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Subsol -->
+    <footer>
+        <div class="container">
+            <h1 class="main-title" style="font-size: 2.5rem;">GIT / GITHUB</h1>
+            <div class="subtitle mono">Fundamentul colaborării moderne în software</div>
+            <div class="footer-right">
+                <p>Proiect realizat pentru Studiul de Caz — Git / GitHub</p>
+                <p>© Informatică aplicată</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
